@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>셔클 히스토리</title>
+<style>
+:root {
+  --bg:      #f5f4f1;
+  --surface: #ffffff;
+  --ink-1:   #0e0e0d;
+  --ink-2:   #44433f;
+  --ink-3:   #939088;
+  --rule:    #deded6;
+
+  --drt:        #2a78d6;
+  --drt-light:  #e8f1fc;
+  --maas:       #eb6834;
+  --maas-light: #fdeee7;
+  --amaas:      #1baf7a;
+  --amaas-light:#e5f5ee;
+  --pleos:      #4a3aa7;
+  --pleos-light:#edeafb;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink-1);
+  font-family: system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 72px 48px 120px;
+}
+
+/* ── HEADER ── */
+.hd { margin-bottom: 72px; }
+
+.hd-eye {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hd-eye::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.hd-h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+
+.hd-sub {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  max-width: 460px;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   JOURNEY — 단계별 진화
+   ═══════════════════════════════════════════════════ */
+.journey-wrap {
+  margin-bottom: 72px;
+}
+
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* Phase cards — full-width vertical stack */
+.j-card {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 22px 24px 20px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2px;
+}
+
+/* Top color bar */
+.j-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+}
+
+.j-card.start::before { background: var(--ink-3); }
+.j-card.drt::before   { background: var(--drt); }
+.j-card.maas::before  { background: var(--maas); }
+.j-card.amaas::before { background: var(--amaas); }
+.j-card.pleos::before { background: var(--pleos); }
+
+/* Stage badge */
+.j-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 9px;
+  border-radius: 100px;
+  margin-bottom: 10px;
+}
+
+.j-card.start .j-badge { background: var(--bg); color: var(--ink-3); border: 1px solid var(--rule); }
+.j-card.drt   .j-badge { background: var(--drt-light);   color: var(--drt); }
+.j-card.maas  .j-badge { background: var(--maas-light);  color: var(--maas); }
+.j-card.amaas .j-badge { background: var(--amaas-light); color: var(--amaas); }
+.j-card.pleos .j-badge { background: var(--pleos-light); color: var(--pleos); }
+
+/* Phase name — large display text */
+.j-name {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.j-card.start .j-name { color: var(--ink-2); font-size: 22px; }
+.j-card.drt   .j-name { color: var(--drt); }
+.j-card.maas  .j-name { color: var(--maas); }
+.j-card.amaas .j-name { color: var(--amaas); }
+.j-card.pleos .j-name { color: var(--pleos); }
+
+/* Italic slogan */
+.j-slogan {
+  font-size: 13px;
+  font-style: italic;
+  color: var(--ink-3);
+  margin-bottom: 14px;
+}
+
+/* Info rows */
+.j-rows { display: flex; flex-direction: column; gap: 9px; }
+
+.j-row-lbl {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.j-card.start .j-row-lbl { color: var(--ink-3); }
+.j-card.drt   .j-row-lbl { color: var(--drt); }
+.j-card.maas  .j-row-lbl { color: var(--maas); }
+.j-card.amaas .j-row-lbl { color: var(--amaas); }
+.j-card.pleos .j-row-lbl { color: var(--pleos); }
+
+.j-row-val {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+/* One-line definition at the bottom */
+.j-def {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid var(--rule);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+
+/* Simple arrow connector between phase cards */
+.j-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  color: var(--ink-3);
+  font-size: 16px;
+  line-height: 1;
+}
+
+
+/* ═══════════════════════════════════════════════
+   TIMELINE
+   ═══════════════════════════════════════════════ */
+/* Grid: [year 88px] [spine 32px] [content *] */
+
+.ph-bar {
+  display: grid;
+  grid-template-columns: 88px 32px 1fr;
+}
+
+.ph-bar-right {
+  border-bottom: 1.5px solid;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding-bottom: 10px;
+}
+
+.ph-bar-right.drt   { border-color: var(--drt); }
+.ph-bar-right.maas  { border-color: var(--maas); }
+.ph-bar-right.amaas { border-color: var(--amaas); }
+.ph-bar-right.pleos { border-color: var(--pleos); }
+
+.ph-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 100px;
+}
+
+.ph-tag.drt   { background: var(--drt-light);   color: var(--drt); }
+.ph-tag.maas  { background: var(--maas-light);  color: var(--maas); }
+.ph-tag.amaas { background: var(--amaas-light); color: var(--amaas); }
+.ph-tag.pleos { background: var(--pleos-light); color: var(--pleos); }
+
+.ph-desc { font-size: 12px; color: var(--ink-3); padding-bottom: 2px; }
+
+.yr-row {
+  display: grid;
+  grid-template-columns: 88px 32px 1fr;
+}
+
+.yr-col {
+  padding-top: 6px;
+  text-align: right;
+}
+
+.yr-n {
+  font-size: 60px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  display: block;
+}
+
+.yr-n.pre   { color: var(--ink-3); }
+.yr-n.drt   { color: var(--drt); }
+.yr-n.maas  { color: var(--maas); }
+.yr-n.amaas { color: var(--amaas); }
+.yr-n.pleos { color: var(--pleos); }
+
+.sp-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sp-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  margin-top: 14px;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.sp-dot.pre   { background: var(--ink-3); }
+.sp-dot.drt   { background: var(--drt); }
+.sp-dot.maas  { background: var(--maas); }
+.sp-dot.amaas { background: var(--amaas); }
+.sp-dot.pleos { background: var(--pleos); width: 16px; height: 16px; margin-top: 12px; }
+
+.sp-line {
+  width: 1px;
+  flex: 1;
+  margin-top: 5px;
+  min-height: 24px;
+}
+
+.sp-line.pre   { background: var(--rule); }
+.sp-line.drt   { background: var(--drt);   opacity: 0.22; }
+.sp-line.maas  { background: var(--maas);  opacity: 0.22; }
+.sp-line.amaas { background: var(--amaas); opacity: 0.22; }
+
+.ct-col {
+  padding-left: 22px;
+  padding-bottom: 48px;
+  padding-top: 8px;
+}
+
+/* Event list */
+.ev-list { display: flex; flex-direction: column; gap: 0; }
+
+.ev {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 0 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ev:first-child { border-top: 1px solid var(--rule); }
+
+.ev-mo {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-3);
+  padding-top: 2px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.ev-t {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-1);
+}
+
+.ev-t strong { font-weight: 700; }
+
+.ev-note {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-3);
+  margin-top: 3px;
+}
+
+.tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+
+.tg {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.02em;
+}
+
+.tg-ms   { background: rgba(237,161,0,.13); color: #7a5600; }
+.tg-gl   { background: var(--amaas-light); color: var(--amaas); }
+.tg-pl   { background: var(--pleos-light); color: var(--pleos); }
+.tg-av   { background: #eff0fb; color: #3a3aaa; }
+.tg-drt  { background: var(--drt-light); color: var(--drt); }
+
+/* Stats */
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.stat-cell { background: var(--surface); padding: 14px 16px; }
+
+.stat-v {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-v.amaas { color: var(--amaas); }
+.stat-l { font-size: 11px; color: var(--ink-3); line-height: 1.3; }
+
+.ph-gap { height: 56px; }
+
+/* Footer */
+.footer {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-size: 11px;
+  color: var(--ink-3);
+  line-height: 1.8;
+}
+
+.footer a { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--ink-3); }
+
+@media (max-width: 580px) {
+  .page { padding: 40px 20px 80px; }
+  .hd-h1 { font-size: 34px; }
+  .yr-n  { font-size: 40px; }
+  .j-card { width: 80%; }
+  .stat-strip { grid-template-columns: 1fr 1fr; }
+  .yr-row { grid-template-columns: 60px 28px 1fr; }
+  .ph-bar { grid-template-columns: 60px 28px 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ─── HEADER ─── -->
+<div class="hd">
+  <div class="hd-eye">SHUCLE · 현대자동차그룹 · 2019 – 2026</div>
+  <h1 class="hd-h1">수요에서<br>플랫폼으로</h1>
+  <p class="hd-sub">
+    DRT → MaaS → A-MaaS → Pleos Move,<br>
+    셔클의 단계별 문제 해결 여정과 연도별 히스토리.
+  </p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     JOURNEY — 단계별 진화
+     ═══════════════════════════════════════════════ -->
+<div class="journey-wrap">
+  <div class="section-label">단계별 진화</div>
+
+  <!-- ① 문제의식 -->
+  <div class="j-card start">
+      <div class="j-badge">출발점</div>
+      <div class="j-name">문제의식</div>
+      <div class="j-slogan">고정 노선과 완전 자유이동 사이의 빈틈</div>
+      <div class="j-rows">
+        <div>
+          <div class="j-row-lbl">핵심 문제</div>
+          <div class="j-row-val">버스는 고정 노선으로 저수요 지역·시간대에 비효율. 택시는 비용 부담이 크고 대중교통으로 취급되지 않음. 신도시·외곽지역 등 <strong>대중교통 사각지대</strong>에서 이동의 자유가 구조적으로 제한됨.</div>
+        </div>
+      </div>
+      <div class="j-def">이후 모든 단계의 출발 전제(Why) — "다수 승객이 유연하게 합승할 수 있는 대중교통이 필요하다"</div>
+    </div>
+
+  <div class="j-arrow">↓</div>
+
+  <!-- ② DRT -->
+  <div class="j-card drt">
+    <div class="j-badge">DRT · 2020–2022</div>
+    <div class="j-name">DRT</div>
+    <div class="j-slogan">"된다"를 증명</div>
+    <div class="j-rows">
+      <div>
+        <div class="j-row-lbl">해결한 문제</div>
+        <div class="j-row-val">고정 노선 없이도 다수 승객을 효율적으로 합승시킬 수 있는가에 대한 <strong>기술적 검증 부재</strong></div>
+      </div>
+      <div>
+        <div class="j-row-lbl">핵심 기술</div>
+        <div class="j-row-val">AI 기반 실시간 다이내믹 라우팅·배차 (라이드풀링) 자체 개발</div>
+      </div>
+      <div>
+        <div class="j-row-lbl">셔클의 역할</div>
+        <div class="j-row-val">은평·세종 등 커뮤니티 단위 PoC → 전국 지자체 확산의 기술적 토대 마련</div>
+      </div>
+    </div>
+    <div class="j-def">DRT는 "이동 사각지대에서도 합승형 대중교통이 기술적으로 가능함"을 증명한 실증 단계</div>
+  </div>
+
+  <div class="j-arrow">↓</div>
+
+  <!-- ③ MaaS -->
+  <div class="j-card maas">
+    <div class="j-badge">MaaS · 2023–2024</div>
+    <div class="j-name">MaaS</div>
+    <div class="j-slogan">"이어진다"를 구현</div>
+    <div class="j-rows">
+      <div>
+        <div class="j-row-lbl">해결한 문제</div>
+        <div class="j-row-val">DRT는 검증됐지만 <strong>단일 서비스로 고립</strong>. 대중교통·라스트마일과 환승이 끊기는 문제</div>
+      </div>
+      <div>
+        <div class="j-row-lbl">핵심 확장</div>
+        <div class="j-row-val">공유자전거·킥보드·택시·버스를 하나의 플랫폼에서 호출·결제·환승 연계</div>
+      </div>
+      <div>
+        <div class="j-row-lbl">셔클의 역할</div>
+        <div class="j-row-val">화이트라벨(똑버스·이응버스)로 전국 확산 · 지역 교통의 <strong>허브(Hub) 통합자</strong> 역할</div>
+      </div>
+    </div>
+    <div class="j-def">MaaS는 DRT를 "다른 교통수단과 이어 붙여 지역 전체 이동을 통합 관리"하는 고도화 단계</div>
+  </div>
+
+  <div class="j-arrow">↓</div>
+
+  <!-- ④ A-MaaS -->
+  <div class="j-card amaas">
+    <div class="j-badge">A-MaaS · 2025~</div>
+    <div class="j-name">A-MaaS</div>
+    <div class="j-slogan">"지속된다"를 확보</div>
+    <div class="j-rows">
+      <div>
+        <div class="j-row-lbl">해결한 문제</div>
+        <div class="j-row-val">MaaS는 통합에 성공했지만 <strong>운전기사 의존</strong>으로 심야·저밀도 지역 운행 지속성 한계</div>
+      </div>
+      <div>
+        <div class="j-row-lbl">핵심 확장</div>
+        <div class="j-row-val">자율주행 기술 결합, 교통약자 전용 차량(R1) 도입, AI 배차 고도화</div>
+      </div>
+      <div>
+        <div class="j-row-lbl">셔클의 역할</div>
+        <div class="j-row-val">"사람이 운전해야 유지되는 서비스"에서 <strong>"기술로 지속 가능한 도시 인프라"</strong>로 전환</div>
+      </div>
+    </div>
+    <div class="j-def">A-MaaS는 MaaS의 지속가능성·확장성 한계를 자율주행으로 돌파하는 심화 고도화 단계</div>
+  </div>
+
+  <div class="j-arrow">↓</div>
+
+  <!-- ⑤ Pleos Move -->
+  <div class="j-card pleos">
+    <div class="j-badge">Pleos Move · 2025~</div>
+    <div class="j-name">Pleos Move</div>
+    <div class="j-slogan">"하나가 된다"를 실현</div>
+    <div class="j-rows">
+      <div>
+        <div class="j-row-lbl">해결한 문제</div>
+        <div class="j-row-val">DRT·MaaS·A-MaaS는 서비스 차원의 진화였지만, <strong>차량·소프트웨어·서비스가 따로 개발</strong>되는 파편화 문제 존재</div>
+      </div>
+      <div>
+        <div class="j-row-lbl">핵심 확장</div>
+        <div class="j-row-val">현대차그룹 SDV 브랜드 <strong>Pleos</strong> 생태계 안으로 셔클 이동 서비스 역량 편입 → 'Move' 영역으로 통합</div>
+      </div>
+      <div>
+        <div class="j-row-lbl">셔클의 역할</div>
+        <div class="j-row-val">서비스적 진화(DRT→MaaS→A-MaaS)를 <strong>차량·SW 플랫폼 차원</strong>에서 하나로 묶어 '이동의 자유' 비전을 실현하는 완성체</div>
+      </div>
+    </div>
+    <div class="j-def">Pleos Move는 셔클이 축적한 역량을 도시 모빌리티 생태계 전체의 표준 이동 솔루션으로 승격시키는 완성 단계</div>
+  </div>
+
+</div><!-- /journey-wrap -->
+
+
+<!-- ═══════════════════════════════════════════════
+     TIMELINE — 연도별 히스토리
+     ═══════════════════════════════════════════════ -->
+<div class="section-label" style="margin-bottom:28px;">연도별 히스토리</div>
+
+<!-- ━━ Phase 1: DRT ━━ -->
+<div class="ph-bar">
+  <div></div><div></div>
+  <div class="ph-bar-right drt">
+    <span class="ph-tag drt">Phase 1 · DRT</span>
+    <span class="ph-desc">플랫폼 구축 · 유료화 · 서비스 확장</span>
+  </div>
+</div>
+
+<!-- 2019 -->
+<div class="yr-row">
+  <div class="yr-col"><span class="yr-n pre">2019</span></div>
+  <div class="sp-col"><div class="sp-dot pre"></div><div class="sp-line pre"></div></div>
+  <div class="ct-col">
+    <div class="ev-list">
+      <div class="ev">
+        <div class="ev-mo"></div>
+        <div>
+          <div class="ev-t">현대차 AI 전담 조직 <strong>에어스 컴퍼니(AIRS Company)</strong>가 국내 첫 라이드 풀링 서비스 '셔클' 개발 착수</div>
+          <div class="ev-note">AI 기반 수요응답형 모빌리티 플랫폼 컨셉 정립 · 다이나믹 라우팅 알고리즘 R&amp;D 시작</div>
+          <div class="tags"><span class="tg tg-drt">개발 시작</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2020 -->
+<div class="yr-row">
+  <div class="yr-col"><span class="yr-n drt">2020</span></div>
+  <div class="sp-col"><div class="sp-dot drt"></div><div class="sp-line drt"></div></div>
+  <div class="ct-col">
+    <div class="ev-list">
+      <div class="ev">
+        <div class="ev-mo">전반</div>
+        <div>
+          <div class="ev-t">플랫폼 자체 개발 — <strong>다이나믹 라우팅 엔진</strong> · 승차/운전자/비히클 앱 · 관제툴 구축</div>
+          <div class="tags"><span class="tg tg-pl">플랫폼 구축</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">2–5월</div>
+        <div>
+          <div class="ev-t"><strong>은평 뉴타운 베타 서비스</strong> — 400여 명 대상 3개월 시범 운행</div>
+          <div class="ev-note">15,000건+ 호출 · 일평균 755km 운행 · 자가용 대체 효과 약 30%</div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">하반기</div>
+        <div>
+          <div class="ev-t">솔라티 차량 업그레이드 · 은평 대형 승합 택시 면허 · 세종 도심 DRT 면허 확보</div>
+          <div class="tags"><span class="tg tg-ms">면허 확보</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2021 -->
+<div class="yr-row">
+  <div class="yr-col"><span class="yr-n drt">2021</span></div>
+  <div class="sp-col"><div class="sp-dot drt"></div><div class="sp-line drt"></div></div>
+  <div class="ct-col">
+    <div class="ev-list">
+      <div class="ev">
+        <div class="ev-mo">2월</div>
+        <div>
+          <div class="ev-t"><strong>은평 뉴타운</strong> 월 구독형 유료 서비스 런칭 — 국내 첫 DRT 구독 모델</div>
+          <div class="tags"><span class="tg tg-ms">최초 유료화</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">4월</div>
+        <div>
+          <div class="ev-t"><strong>세종 1생활권</strong> 월 구독형 유료 서비스 런칭 · 단건 결제 멤버십 추가 · 8대 증차</div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">10·11월</div>
+        <div>
+          <div class="ev-t">자율주행 셔틀 실증 — <strong>남양연구소</strong>(10월) · <strong>판교제로시티</strong>(11월)</div>
+          <div class="tags"><span class="tg tg-av">자율주행 실증</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">12월</div>
+        <div>
+          <div class="ev-t">파주 준공영제 수도권 환승요금제 적용 유료 서비스 런칭</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2022 -->
+<div class="yr-row">
+  <div class="yr-col"><span class="yr-n drt">2022</span></div>
+  <div class="sp-col"><div class="sp-dot drt"></div><div class="sp-line drt"></div></div>
+  <div class="ct-col">
+    <div class="ev-list">
+      <div class="ev">
+        <div class="ev-mo">4월</div>
+        <div><div class="ev-t">세종 멤버십 개편 — 단건 호출 기능 추가 / 은평 서비스 종료</div></div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">6월</div>
+        <div><div class="ev-t">예약 기능 개발로 운행 품질 개선</div></div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">9월</div>
+        <div>
+          <div class="ev-t"><strong>판교 로보셔틀</strong> 시범운행</div>
+          <div class="tags"><span class="tg tg-av">로보셔틀</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">11월</div>
+        <div><div class="ev-t">세종 멤버십 개편 — 티머니 환승 요금제 적용</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ph-gap"></div>
+
+<!-- ━━ Phase 2: MaaS ━━ -->
+<div class="ph-bar">
+  <div></div><div></div>
+  <div class="ph-bar-right maas">
+    <span class="ph-tag maas">Phase 2 · MaaS</span>
+    <span class="ph-desc">플랫폼 개방 · 화이트라벨 · 멀티모달</span>
+  </div>
+</div>
+
+<!-- 2023 -->
+<div class="yr-row">
+  <div class="yr-col"><span class="yr-n maas">2023</span></div>
+  <div class="sp-col"><div class="sp-dot maas"></div><div class="sp-line maas"></div></div>
+  <div class="ct-col">
+    <div class="ev-list">
+      <div class="ev">
+        <div class="ev-mo">2월</div>
+        <div>
+          <div class="ev-t">화이트라벨 앱 <strong>'똑타'</strong> 출시 — 경기도 MaaS 서비스 (경기교통공사 협업, 안산 대부도 시작)</div>
+          <div class="ev-note">셔클 플랫폼 첫 B2G 공급 사례 · 택시 연계 MaaS 확장 동시 추진</div>
+          <div class="tags"><span class="tg tg-pl">첫 화이트라벨</span><span class="tg tg-ms">플랫폼 개방</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">상반기</div>
+        <div>
+          <div class="ev-t">지역분석 인사이트 시뮬레이터 구축 — 수요 예측 데이터 인텔리전스</div>
+          <div class="tags"><span class="tg tg-pl">데이터 인텔리전스</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">연중</div>
+        <div>
+          <div class="ev-t">똑타 기반 경기도 11개 지역 순차 오픈</div>
+          <div class="tags"><span class="tg tg-ms">11개 지역</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">6월</div>
+        <div><div class="ev-t">충북 혁신도시 DRT 도입사업 오픈</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2024 -->
+<div class="yr-row">
+  <div class="yr-col"><span class="yr-n maas">2024</span></div>
+  <div class="sp-col"><div class="sp-dot maas"></div><div class="sp-line maas"></div></div>
+  <div class="ct-col">
+    <div class="ev-list">
+      <div class="ev">
+        <div class="ev-mo">5월</div>
+        <div>
+          <div class="ev-t">DRT <strong>200대</strong> 운행 달성</div>
+          <div class="tags"><span class="tg tg-ms">200대</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">6월</div>
+        <div>
+          <div class="ev-t">MaaS형 홈 디자인으로 앱 전면 개편 — 홈에서 다양한 모빌리티 선택</div>
+          <div class="tags"><span class="tg tg-pl">멀티모달 UX</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">7월 1일</div>
+        <div>
+          <div class="ev-t">세종특별자치시 화이트라벨 통합 앱 <strong>'이응'</strong> 출시</div>
+          <div class="ev-note">이응버스·자전거·킥보드·택시 통합 · 이응패스(월 2만원 교통 정액권) · 누적 탑승 163만 명(세종)</div>
+          <div class="tags"><span class="tg tg-pl">화이트라벨 2호</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">7월</div>
+        <div><div class="ev-t">관광형 DRT — <strong>광주투어버스</strong> 앱 출시</div></div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">12월</div>
+        <div><div class="ev-t">경기도 의왕시 바우처 택시사업 시범오픈</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ph-gap"></div>
+
+<!-- ━━ Phase 3: A-MaaS ━━ -->
+<div class="ph-bar">
+  <div></div><div></div>
+  <div class="ph-bar-right amaas">
+    <span class="ph-tag amaas">Phase 3 · A-MaaS</span>
+    <span class="ph-desc">AI · 교통약자 · 글로벌 · 자율주행</span>
+  </div>
+</div>
+
+<!-- 2025 -->
+<div class="yr-row">
+  <div class="yr-col"><span class="yr-n amaas">2025</span></div>
+  <div class="sp-col"><div class="sp-dot amaas"></div><div class="sp-line amaas"></div></div>
+  <div class="ct-col">
+    <div class="ev-list">
+      <div class="ev">
+        <div class="ev-mo">3월</div>
+        <div>
+          <div class="ev-t">현대차 개발자 컨퍼런스 <strong>'Pleos 25'</strong> — 셔클 플랫폼 시연 · ST/R1 차량 전시</div>
+          <div class="tags"><span class="tg tg-pl">Pleos 플랫폼</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">3월</div>
+        <div>
+          <div class="ev-t">셔클 가입자 <strong>100만명</strong> 달성</div>
+          <div class="ev-note">전년(약 40만) 대비 2배 이상 성장 → 3월 기준 100만 돌파</div>
+          <div class="tags"><span class="tg tg-ms">100만 가입자</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">4월</div>
+        <div>
+          <div class="ev-t">교통약자 전용 차량 <strong>R1</strong> — 화성 동탄신도시 시범 운행</div>
+          <div class="ev-note">김수영 상무: "교통약자의 이동권 보장이라는 사회 현안에 대한 실질적 솔루션"</div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">4월</div>
+        <div>
+          <div class="ev-t">DRT <strong>300대</strong> 운행 달성</div>
+          <div class="tags"><span class="tg tg-ms">300대</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">5월</div>
+        <div>
+          <div class="ev-t">현대차·기아, <strong>광주광역시 자율주행 실증</strong> MOU 체결</div>
+          <div class="ev-note">국토부·광주시·TS·삼성화재·오토노머스A2Z·라이드플럭스 참여. 아이오닉5 로보택시 200대, 셔클이 운영 OS 역할</div>
+          <div class="tags"><span class="tg tg-av">레벨4 자율주행</span><span class="tg tg-pl">셔클 OS</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">8월</div>
+        <div>
+          <div class="ev-t"><strong>헝가리 괴될뢰시(Gödöllő)</strong> 수요응답교통 시범사업 착수 — 셔클 첫 해외 실증 (8.18–10.31, 약 11주)</div>
+          <div class="ev-note">기획재정부·KDI 경제혁신파트너십(EIPP) 사업 · 차량 2대 투입</div>
+          <div class="tags"><span class="tg tg-gl">글로벌 첫 실증</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">9월</div>
+        <div><div class="ev-t">민관 합동 <strong>K-교통 얼라이언스 · NUMA</strong> 출범</div></div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">10월</div>
+        <div>
+          <div class="ev-t"><strong>AI 호출 도우미</strong> 실증</div>
+          <div class="tags"><span class="tg tg-av">AI</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">11월</div>
+        <div>
+          <div class="ev-t">헝가리 시범사업 성료 — 3,138건 호출 · 2,950명 이용 · 배차 대기시간 60분→6분(90% 감소)</div>
+          <div class="ev-note">김수영 모빌리티사업실 상무: "괴될뢰 주민 만족도와 운영 효율성을 동시에 입증. 현지 파트너십 기반 글로벌 확장 본격화할 것"</div>
+          <div class="tags"><span class="tg tg-gl">글로벌 확장</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">12월</div>
+        <div>
+          <div class="ev-t">DRT <strong>400대</strong> 운행 달성</div>
+          <div class="tags"><span class="tg tg-ms">400대</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-strip">
+      <div class="stat-cell"><div class="stat-v amaas">130만+</div><div class="stat-l">가입자</div></div>
+      <div class="stat-cell"><div class="stat-v amaas">1,367만</div><div class="stat-l">누적 탑승객</div></div>
+      <div class="stat-cell"><div class="stat-v amaas">5,194만km</div><div class="stat-l">누적 운행 거리</div></div>
+      <div class="stat-cell"><div class="stat-v amaas">71개</div><div class="stat-l">서비스 지역</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="ph-gap"></div>
+
+<!-- ━━ Pleos Move ━━ -->
+<div class="ph-bar">
+  <div></div><div></div>
+  <div class="ph-bar-right pleos">
+    <span class="ph-tag pleos">Platform Shift · Pleos Move</span>
+  </div>
+</div>
+
+<!-- 2026~ -->
+<div class="yr-row">
+  <div class="yr-col">
+    <span class="yr-n pleos" style="font-size:44px; line-height:1.2;">2026<br><span style="font-size:32px;">~</span></span>
+  </div>
+  <div class="sp-col"><div class="sp-dot pleos"></div></div>
+  <div class="ct-col" style="padding-bottom:0;">
+    <div class="ev-list" style="margin-bottom:16px;">
+      <div class="ev">
+        <div class="ev-mo">진행중</div>
+        <div>
+          <div class="ev-t"><strong>광주 자율주행 실증</strong> — 아이오닉5 기반 로보택시 200대, <strong>아트리아 AI(Atria AI)</strong> 탑재</div>
+          <div class="ev-note">카메라 8개+레이더, E2E 자율주행 · 셔클이 차량-이용자-관제 연결 OS 역할 · 2026년 광주 5개 구 전역 확대</div>
+          <div class="tags"><span class="tg tg-av">레벨4 목표</span><span class="tg tg-pl">셔클 = 로보택시 OS</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">계획</div>
+        <div>
+          <div class="ev-t">강릉시 교통 소외 지역 <strong>자율주행 DRT</strong> 실증 — 현대자동차·강릉시 MOU 체결</div>
+          <div class="tags"><span class="tg tg-av">자율주행 DRT</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-mo">계획</div>
+        <div>
+          <div class="ev-t">유럽·아시아 셔클 플랫폼 추가 확장 — 헝가리 실증 성공 기반 글로벌 파트너십</div>
+          <div class="tags"><span class="tg tg-gl">글로벌 확장</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  수치는 2025년 11월 기준 · 출처:
+  <a href="https://www.hyundaimotorgroup.com/ko/tag/shucle">현대자동차그룹 셔클 인사이트</a> ·
+  <a href="https://www.hyundaimotorgroup.com/ko/news/CONT0000000000191893">헝가리 시범사업 공식 발표</a> ·
+  <a href="https://biz.heraldcorp.com/article/10736705">광주 자율주행 실증 (헤럴드경제)</a> ·
+  <a href="https://www.news1.kr/industry/auto-industry/6164905">아트리아 AI (뉴스1)</a> ·
+  <a href="https://www.fnnews.com/news/202502121826565915">셔클 인터뷰 (파이낸셜뉴스)</a>
+</div>
+
+</div><!-- /page -->
+</body>
+</html>
